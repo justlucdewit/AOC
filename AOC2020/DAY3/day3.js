@@ -37,7 +37,6 @@ const part2 = () => {
     ];
 
     let answer = 1;
-
     slopes.forEach(slope => {
         const height = input.length - 1;
         const width = input[0].length;
