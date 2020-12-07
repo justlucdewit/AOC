@@ -36,4 +36,4 @@ const part2 = () => {
     return sum
 };
 
-console.log(part2());
+console.log(part1());

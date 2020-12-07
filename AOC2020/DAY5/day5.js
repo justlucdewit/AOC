@@ -12,18 +12,9 @@ rows = input.map(x => x.filter((_, i) => i < 7)).map(x => parseInt(x.join(""), 2
 cols = input.map(x => x.filter((_, i) => i >= 7)).map(x => parseInt(x.join(""), 2));
 
 const part1 = () => {
-    let highest = 0;
 
     // calculate each seat's id and find the highest
-    rows.forEach((row, i) => {
-        const col = cols[i];
-        const id = row * 8 + col;
-        
-        if (id > highest)
-            highest = id;
-    });
-
-    return highest;
+    return [...rows.map((row, i) => row * 8 + cols[i])];
 };
 
 
