@@ -1,4 +1,3 @@
-const { cpuUsage } = require("process");
 const helpers = require("../Helpers/fileReader");
 
 const readFileString = helpers.readFileString;
@@ -66,7 +65,7 @@ const part2 = () => {
             });
         });
     };
-    
+
     lookfor("shiny gold");
     return bagCount;
 };
