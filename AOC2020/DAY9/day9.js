@@ -1,9 +1,10 @@
 const helpers = require("../Helpers/fileReader");
+
 const readFileLines = helpers.readFileLines
 
 let input = readFileLines("input.txt").map(Number);
 
-const part1 = (inp = input) => {
+const part1 = () => {
     const preambleSize = 25;
     for (let index = 0; index < input.length; index++) {
         if (index < preambleSize)
