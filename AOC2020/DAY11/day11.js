@@ -1,167 +1,67 @@
-/*
-    If a seat is empty (L) and there are no occupied
-    seats adjacent to it, the seat becomes occupied.
-    
-    If a seat is occupied (#) and four or more seats
-    adjacent to it are also occupied, the seat becomes empty.
-    
-    Otherwise, the seat's state does not change.
-*/
-
+// import the helpers
 const helpers = require("../Helpers/fileReader");
 
-const readFileLines = helpers.readFileLines
-
+// parse the input
+const readFileLines = helpers.readFileLines;
 let input = readFileLines("input.txt").map(x => x.replace(/\n|\r/, "").split(""));
+
+const range = helpers.range;
+const adjecentCoords = [[1, -1], [1, 0], [1, 1], [0, -1], [0, 1], [-1, -1], [-1, 0], [-1, 1]];
+const getAdjacents = (state, x, y) => adjecentCoords.map(coord => state.RelMatPos(x, y, coord[0], coord[1]));
+const getAdjacentsP2 = (state, x, y) => range(0, 8).map(i => lookForSeat(state, x, y, i));
 
 const lookForSeat = (state, x, y, dir) => {
 	let magnitude = 1;
 
-	switch(dir) {
-		case 0: {
-			while(state[y][x + magnitude] === '.') {
-				++magnitude;
-			}
+	while (state.RelMatPos(x, y, adjecentCoords[dir][0], adjecentCoords[dir][1], magnitude) == '.')
+		++magnitude;
 
-			return state[y][x + magnitude];
-		}
-
-		case 1: {
-			while(state[y][x - magnitude] === '.') {
-				++magnitude;
-			}
-
-			return state[y][x - magnitude];
-		}
-
-		case 2: {
-			while((state[y + magnitude] ? state[y + magnitude][x] : undefined) === '.') {
-				++magnitude;
-			}
-
-			return state[y + magnitude] ? state[y + magnitude][x] : undefined;
-		}
-
-		case 3: {
-			while((state[y - magnitude] ? state[y - magnitude][x] : undefined) === '.') {
-				++magnitude;
-			}
-
-			return state[y - magnitude] ? state[y - magnitude][x] : undefined;
-		}
-
-		case 4: {
-			while((state[y + magnitude] ? state[y + magnitude][x + magnitude] : undefined) === '.') {
-				++magnitude;
-			}
-
-			return state[y + magnitude] ? state[y + magnitude][x + magnitude] : undefined;
-		}
-
-		case 5: {
-			while((state[y + magnitude] ? state[y + magnitude][x - magnitude] : undefined) === '.') {
-				++magnitude;
-			}
-
-			return state[y + magnitude] ? state[y + magnitude][x - magnitude] : undefined;
-		}
-
-		case 6: {
-			while((state[y - magnitude] ? state[y - magnitude][x + magnitude] : undefined) === '.') {
-				++magnitude;
-			}
-
-			return state[y - magnitude] ? state[y - magnitude][x + magnitude] : undefined;
-		}
-
-		case 7: {
-			while((state[y - magnitude] ? state[y - magnitude][x - magnitude] : undefined) === '.') {
-				++magnitude;
-			}
-
-			return state[y - magnitude] ? state[y - magnitude][x - magnitude] : undefined;
-		}
-	}
+	return state.RelMatPos(x, y, adjecentCoords[dir][0], adjecentCoords[dir][1], magnitude);
 }
-
-const getAdjacents = (state, x, y) => 
-	[
-		state[y][x + 1], 
-		state[y][x - 1],
-		state[y + 1] ? state[y + 1][x] : undefined,
-		state[y - 1] ? state[y - 1][x] : undefined,
-		state[y + 1] ? state[y + 1][x + 1] : undefined,
-		state[y + 1] ? state[y + 1][x - 1] : undefined,
-		state[y - 1] ? state[y - 1][x + 1] : undefined,
-		state[y - 1] ? state[y - 1][x - 1] : undefined
-	]
-
-const getAdjacentsP2 = (state, x, y) => 
-	[
-		lookForSeat(state, x, y, 0), 
-		lookForSeat(state, x, y, 1),
-		lookForSeat(state, x, y, 2),
-		lookForSeat(state, x, y, 3),
-		lookForSeat(state, x, y, 4), 
-		lookForSeat(state, x, y, 5),
-		lookForSeat(state, x, y, 6),
-		lookForSeat(state, x, y, 7),
-	]
 
 const part1 = () => {
 	while (true) {
-		const cloned = JSON.parse(JSON.stringify(input));
-		let changes = 0;
+		const cloned = input.clone();
+		let change = false;
 
 		input.forEach((row, y) => {
 			row.forEach((seat, x) => {
 				if (seat === '#') {
-					if (getAdjacents(input, x, y).filter(x => x == '#').length >= 4) {
+					if (getAdjacents(input, x, y).count(x => x == '#') >= 4) {
 						cloned[y][x] = 'L';
-						++changes;
+						change = true;
 					}
 				} else if (seat === 'L') {
 					if (getAdjacents(input, x, y).every(x => x !== '#')) {
 						cloned[y][x] = '#';
-						++changes;
+						change = true;
 					}
 				}
 			});
 		});
 
-		if (changes === 0)
+		if (!change)
 			break;
 
-		input = JSON.parse(JSON.stringify(cloned));
+		input = cloned.clone();
 	}
 
-	let count = 0;
-
-	input.forEach((row) => {
-		row.forEach((seat) => {
-			if (seat === '#')
-				++count;
-		});
-	});
-
-	return count;
+	return input.flat().count(x => x === '#');
 };
 
 const part2 = () => {
 	while (true) {
-		const cloned = JSON.parse(JSON.stringify(input));
+		const cloned = input.clone();
 		let changes = 0;
 
 		input.forEach((row, y) => {
 			row.forEach((seat, x) => {
 				if (seat === '#') {
-					// console.log(getAdjacentsP2(input, x, y))
-					if (getAdjacentsP2(input, x, y).filter(x => x == '#').length >= 5) {
+					if (getAdjacentsP2(input, x, y).filter(x => x === '#').length >= 5) {
 						cloned[y][x] = 'L';
 						++changes;
 					}
 				} else if (seat === 'L') {
-					// console.log(getAdjacentsP2(input, x, y))
 					if (getAdjacentsP2(input, x, y).every(x => x !== '#')) {
 						cloned[y][x] = '#';
 						++changes;
@@ -173,20 +73,11 @@ const part2 = () => {
 		if (changes === 0)
 			break;
 
-		input = JSON.parse(JSON.stringify(cloned));
-		// console.log(input)
+		input = cloned.clone();
 	}
 
-	let count = 0;
-
-	input.forEach((row) => {
-		row.forEach((seat) => {
-			if (seat === '#')
-				++count;
-		});
-	});
-
-	return count;
+	return input.flat().count(x => x === '#');
 }
 
-console.log(part2());
+// console.log("2321 = " + part1());
+// console.log("2102 = " + part2());
