@@ -12,6 +12,23 @@ const input = fs.readFileSync('./input.txt')
 const part1 = () => {
     let hpos = 0;
     let vpos = 0;
+
+    input.forEach(command => {
+        if (command[0] == 'forward') {
+            hpos += command[1]
+        } else if (command[0] == 'up') {
+            vpos -= command[1]
+        } else if (command[0] == 'down') {
+            vpos += command[1]
+        }
+    });
+
+    return hpos * vpos;
+}
+
+const part2 = () => {
+    let hpos = 0;
+    let vpos = 0;
     let aim = 0;
 
     input.forEach(command => {
@@ -28,9 +45,5 @@ const part1 = () => {
     return hpos * vpos;
 }
 
-const part2 = () => {
-    return
-}
-
 console.log(part1())
-// console.log(part2())
+console.log(part2())
