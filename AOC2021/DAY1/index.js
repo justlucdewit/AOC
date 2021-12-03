@@ -35,5 +35,5 @@ const part2 = () => {
     return n
 }
 
-// console.log(part1())
+console.log(part1())
 console.log(part2())
