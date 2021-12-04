@@ -135,6 +135,9 @@ const d = n => divisors(n).sum() - n;
 const isAmicable = n =>
     d(d(n)) == n && n !== d(n);
 
+const transpose = (matrix) => 
+    matrix[0].map((_, i) => matrix.map(row => row[i]));
+
 module.exports = {
     range,
     isPrime,
@@ -143,6 +146,7 @@ module.exports = {
     divisors,
     divisorsCount,
     time,
+    transpose,
     collatzSequence,
     collatzSequenceCount,
     aChooseB,
