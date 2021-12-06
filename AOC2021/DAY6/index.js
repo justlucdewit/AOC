@@ -1,10 +1,25 @@
 const fs = require('fs')
 const helpers = require('../helpers/helpers')
-const input = fs.readFileSync('./input.txt')
+let fish = fs.readFileSync('./input.txt')
                 .toString()
+                .split(',')
+                .map(Number)
+
+const calculateNextFishGeneration = () => {
+
+    // Lower the counter of all fishes
+    fish = fish.map(x => x - 1)
+
+    
+}
 
 const part1 = () => {
-    return
+    for (let i = 0; i < 5; i++) {
+        console.log(fish)
+        calculateNextFishGeneration()
+    }
+
+    return ''
 }
 
 const part2 = () => {
