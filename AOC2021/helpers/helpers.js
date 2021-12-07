@@ -1,6 +1,30 @@
 Array.prototype.sum = function () {
+    if (this.length === 0)
+        return 0
+
     return this.reduce((a, b) => a + b);
 }
+
+Array.prototype.max = function () {
+    let record = -999999999999999999;
+    this.forEach(n => {
+        if (n > record)
+            record = n
+    })
+
+    return record
+}
+
+Array.prototype.min = function () {
+    let record = 999999999999999999;
+    this.forEach(n => {
+        if (n < record)
+            record = n
+    })
+
+    return record
+}
+
 
 Array.prototype.product = function () {
     return this.reduce((a, b) => a * b);
